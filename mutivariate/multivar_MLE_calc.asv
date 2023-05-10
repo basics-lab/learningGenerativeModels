@@ -1,0 +1,12 @@
+clear;clc;
+rng(0)
+d = 10;
+n = 5;
+sigma = eye(d);
+A = randn(d,d);
+sigma = A*sigma*A';
+mu = zeros(d,1);
+Y = max(0, mvnrnd(mu,sigma,n)');
+U = inv(sigma)/2;
+V = -2*U*mu;
+grad_lik_function(Y,U,V);

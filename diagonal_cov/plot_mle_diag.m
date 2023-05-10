@@ -38,7 +38,6 @@ for j = 1:N
     time = toc;
     dist_v_b(j,:) = mean(dist(:,:,j),1);
     dist_v_b_wu(j,:) = mean(dist_wu(:,:,j),1);
-
     fprintf("t=%.2fsec for b=%.2f, Avg TV=%f, Avg KL=%f\n",time, b_space(j), dist_v_b(j,1), dist_v_b(j,2));
 end
 figure;
