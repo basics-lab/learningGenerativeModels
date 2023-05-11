@@ -1,12 +1,22 @@
 clear;clc;
 rng(0)
-d = 10;
-n = 5;
-sigma = eye(d);
-A = randn(d,d);
-sigma = A*sigma*A';
+d = 2;
+n = 10;
+A = eye(d) + randn(d,d)./(2*d);
+sigma = A*A';
 mu = zeros(d,1);
 Y = max(0, mvnrnd(mu,sigma,n)');
 U = inv(sigma)/2;
 V = -2*U*mu;
-grad_lik_function(Y,U,V);
+for i=1:5
+    [gradu, gradv] = grad_lik_function(Y,U,V)
+end
+for i=1:5
+    lik = lik_func_multivar(Y,U,V)
+end
+%% Compute the gradient via finite differences
+for i=1:d
+V(i) = 1;
+eps = 1e
+
+end

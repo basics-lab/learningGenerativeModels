@@ -3,8 +3,9 @@ function lik = lik_func_multivar(Y, U, V)
     [d,n] = size(Y);
     S = Y <= 0;
     Sc =~S;
-    L = chol(U);
-    logdetU = 2*sum(log(diag(L)));
+    %L = chol(U);
+    %logdetU = 2*sum(log(diag(L)));
+    log(det(U))
     lik = zeros(n,1);
     for i=1:n
         s = S(:,i);
@@ -16,10 +17,12 @@ function lik = lik_func_multivar(Y, U, V)
         else
             r = U(s, sc)*Y(sc,i) + 0.5*V(s);
             Us = U(s,s);
-            M = chol(Us);
-            invM = inv(M);
-            invUs = invM*invM';
-            logdetUs = 2*sum(log(diag(M)));
+            %M = chol(Us);
+            %invM = inv(M);
+            %invUs = invM*invM';
+            %logdetUs = 2*sum(log(diag(M)));
+            logdetUs = log(det(Us));
+            invUs = inv
             mu = -invUs*r;
             lik(i) = lik(i) -r'*mu - 0.5*logdetUs ...
             + log(mvncdf(zeros(d_s,1),mu,0.5*invUs,options));
