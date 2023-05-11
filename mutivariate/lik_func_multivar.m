@@ -1,5 +1,5 @@
 function lik = lik_func_multivar(Y, U, V)
-    options = statset('TolFun',1e-5);
+    options = statset('TolFun',1e-6);
     [d,n] = size(Y);
     S = Y <= 0;
     Sc =~S;
