@@ -1,5 +1,7 @@
-function plot_mle_vs_n(distribution, n_dist_mc, n_mc, seed)
+function plot_mle_vs_n(dist_idx, n_dist_mc, n_mc, seed)
 %% Setup
+distributions = ["Normal", "Exponential", "Cauchy"];
+distribution = distributions(dist_idx);
 d = 10;
 rng(seed)
 N=10; % number of points
@@ -14,7 +16,7 @@ for j = 1:N
     dist = zeros(n_mc, 1);
     fprintf("Working on n=%i\n",n)
     tic;
-    for i = 1:n_mc
+    parfor i = 1:n_mc
         % Get new samples
         if distribution == "Cauchy"
             X = trnd(1, d, n);
