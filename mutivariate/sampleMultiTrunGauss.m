@@ -3,9 +3,14 @@ function samples = sampleMultiTrunGauss(mu, sigma2, num_samples)
 d = length(mu);
 samples = [];
 T = max(100, num_samples*10);
+t = 0;
 while size(samples,2)<num_samples
     x = mvnrnd(mu,sigma2, T)';
     samples = [samples, x(:,sum(x < 0,1) == d)];
+    t =t+1;
+    if(t == 100000)
+        keyboard;
+    end
 end
 if num_samples == 1
     samples = samples(:,1);

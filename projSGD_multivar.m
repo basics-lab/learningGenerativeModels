@@ -1,7 +1,7 @@
 function [U_avg,V_avg] = projSGD_multivar(Y, U0, V0)
     %% Parameters
     [d,n] = size(Y);
-    lambda = 10;
+    lambda = 100;
     batch_size = 10;
     num_batch = floor(n/batch_size);
     U = U0;

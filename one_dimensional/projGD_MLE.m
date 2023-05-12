@@ -1,30 +1,42 @@
-function [u,v] = projGD_MLE(y, X, u0, v0)
+function [u,v, res, iter] = projGD_MLE(y, X, u0, v0)
     %% Parameters
-    max_iter = 100000;
-    step_max = 1e-3;
-    step_min = 9e-6;
-    tol = 1e-2;
+    max_iter = 10000;
+    tol = 0.01;
+    tolv = 1e-2;
+    beta = 0.4;
     %% Definitions
     S = y > 0;
     Sc = y <= 0;
-    options = optimset('TolX', step_min);
     gradu = @(u,v) X(:,S) * (v*y(S)' - u'*X(:,S))' ...
                  - X(:,Sc)* (normpdf(-u'*X(:,Sc))./normcdf(-u'*X(:,Sc)))';
     gradv = @(u,v) nnz(S)/v - y(S)'*(v*y(S) - X(:,S)'*u);
-    lik = @(u,v,du,dv,a) -lik_func((u + a*du), (v + a*dv), X, y);
+    lik = @(u,v,du,dv,a) -lik_func((u + a*du), max([v + a*dv, tolv]), X, y);
     u = u0;
     v = v0;
     t = 0;
-    du = Inf;
-    dv = Inf;
+    res = inf;
+    curr = lik(u,v,0,0,0);
     %% Iterations
-    while t < max_iter && (norm(du) + abs(dv) > tol)
+    while t < max_iter && (res > tol)
         t = t + 1;
+        alpha = 1;
         du = gradu(u,v);
         dv = gradv(u,v);
-        step = fminsearch(@(a) lik(u,v,du,dv,a) + 1e10*(a < 0), 0, options); % Line Search
-        step = max([step, step_min]);
-        u = u + (step)*du;
-        v = max([v + (step)*dv, 1e-3]);
+        res = du'*du + dv'*dv;
+        diff = lik(u,v,du,dv,alpha)-curr;
+        if isnan(diff)
+            diff = Inf;
+        end
+        while diff > -alpha/2*res
+            alpha = beta*alpha;
+            diff = lik(u,v,du,dv,alpha) - curr;
+            if isnan(diff)
+                diff = Inf;
+            end
+        end
+        curr = diff + curr;
+        u = u + alpha*du;
+        v = max([v + alpha*dv, tolv]);
     end
+    iter = t;
 end

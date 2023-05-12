@@ -1,9 +1,14 @@
-function plot_mle_vs_n(distribution, n_dist_mc, n_mc, seed)
+function get_MLE_1d(distribution, n_dist_mc, n_mc, seed)
 %% Setup
+clear;clc;
 d = 10;
+n_mc = 10; % number of
+n_dist_mc = 100;
+seed = 1;
 rng(seed)
+distribution = "Exponential";
 N=10; % number of points
-n_space = ceil(logspace(2, 5, N)); %number of samples
+n_space = ceil(logspace(3, 5, N)); %number of samples
 w_star = randn(d,1);
 sigma = 1;
 [u_star,v_star] = parameter_tf(w_star, sigma);
@@ -24,8 +29,8 @@ for j = 1:N
             X = (2*(rand(d,n) > 0.5) - 1).*exprnd(1,d,n);
         end
         y = (w_star'*X)' + sigma*randn(n,1);
-        u0 = randn(d,1);
-        v0 = 0.8;
+        u0 = w_star;
+        v0 = v_star;
         tic;
         %[u_hat_cvx, v_hat_cvx] = cvx_solve(X,y);
         [u_hat, v_hat, res, iter] = projGD_MLE(y, X, u0, v0);
@@ -45,8 +50,7 @@ for j = 1:N
     fprintf("Total time = %.2fsec\n",time)
     dist_v_n(j,:) = mean(dist);
 end
-filename = sprintf('%s_seed%d_%s.mat', distribution, seed, datestr(now,'HH_MM_SS_FFF'));
-save(filename);
+semilogx(n_space, dist_v_n)
 %% Helper Functions
 function [u,v] = parameter_tf(w,s)
     u=w/s; v=1/s;
