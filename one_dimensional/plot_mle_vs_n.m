@@ -10,10 +10,14 @@ w_star = randn(d,1);
 sigma = 1;
 [u_star,v_star] = parameter_tf(w_star, sigma);
 %%
-dist_v_n = zeros(N,3);
+iter_v_n = zeros(N,n_mc);
+res_v_n = zeros(N,n_mc);
+dist_v_n = zeros(N,n_mc);
 for j = 1:N
     n = n_space(j);
     dist = zeros(n_mc, 1);
+    res = zeros(n_mc,1);
+    iter = zeros(n_mc,1);
     fprintf("Working on n=%i\n",n)
     tic;
     parfor i = 1:n_mc
@@ -30,8 +34,8 @@ for j = 1:N
         v0 = 0.8;
         tic;
         %[u_hat_cvx, v_hat_cvx] = cvx_solve(X,y);
-        [u_hat, v_hat, res, iter] = projGD_MLE(y, X, u0, v0);
-        fprintf("MLE Compute time: %.3f, in %d iterations, res=%d\n", toc, iter, res);
+        [u_hat, v_hat, res(i), iter(i)] = projGD_MLE(y, X, u0, v0);
+        fprintf("MLE Compute time: %.3f, in %d iterations, res=%d\n", toc, iter(i), res(i));
         tic;
         if distribution == "Cauchy"
             X_sample = trnd(1, d, n_dist_mc);
@@ -41,11 +45,14 @@ for j = 1:N
             X_sample = (2*(rand(d,n_dist_mc) > 0.5) - 1).*exprnd(1,d,n_dist_mc);
         end
         dist(i) = distance_metrics(u_hat, v_hat, u_star, v_star, X_sample);
+        
         fprintf('distance compute time=%.3f\n', toc);
     end
     time = toc;
     fprintf("Total time = %.2fsec\n",time)
-    dist_v_n(j,:) = mean(dist);
+    dist_v_n(j,:) = dist;
+    res_v_n(j,:) = res;
+    iter_v_n(j,:) = iter;
 end
 filename = sprintf('%s_seed%d_%s.mat', distribution, seed, datestr(now,'HH_MM_SS_FFF'));
 save(filename);
