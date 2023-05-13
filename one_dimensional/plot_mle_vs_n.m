@@ -1,12 +1,11 @@
-function plot_mle_vs_n(dist_idx, n_dist_mc, n_mc, seed)
+function plot_mle_vs_n(dist_idx, n_dist_mc, n_mc, d, seed)
 %% Setup
 distributions = ["Normal", "Exponential", "Cauchy"];
 distribution = distributions(dist_idx);
-d = 10;
 rng(seed)
 N=10; % number of points
 n_space = ceil(logspace(2, 5, N)); %number of samples
-w_star = randn(d,1);
+w_star = ones(d,1);
 sigma = 1;
 [u_star,v_star] = parameter_tf(w_star, sigma);
 %%
@@ -54,7 +53,7 @@ for j = 1:N
     res_v_n(j,:) = res;
     iter_v_n(j,:) = iter;
 end
-filename = sprintf('%s_seed%d_%s.mat', distribution, seed, datestr(now,'HH_MM_SS_FFF'));
+filename = sprintf('%s_seed%d_d%i_%s.mat', distribution, seed,d ,datestr(now,'HH_MM_SS_FFF'));
 save(filename);
 %% Helper Functions
 function [u,v] = parameter_tf(w,s)
