@@ -4,6 +4,7 @@ rng(seed);
 b_space = linspace(-5,5,N); %grid
 sigma = ones(3,1);
 verbose = true;
+filename = sprintf('diag_bias_seed%d_%s.mat', seed, datestr(now,'HH_MM_SS_FFF'));
 %% 
 dist_v_b = zeros(N,2);
 dist_v_b_wu = zeros(N,2);
@@ -51,11 +52,9 @@ for j = 1:N
     dist_v_b(j,:) = mean(dist(:,:,j),1);
     dist_v_b_wu(j,:) = mean(dist_wu(:,:,j),1);
     dist_v_b_wu2(j,:) = mean(dist_wu2(:,:,j),1);
-
     fprintf("t=%.2fsec for b=%.2f, Avg TV=%f, Avg KL=%f\n",time, b_space(j), dist_v_b(j,1), dist_v_b(j,2));
+    save(filename);
 end
-filename = sprintf('diag_bias_seed%d_%s.mat', seed, datestr(now,'HH_MM_SS_FFF'));
-save(filename);
 function dist = tv_tringle(s1,b1,s2,b2)
     dist = sum(abs(normcdf(-b1./s1) - normcdf(-b2./s2)));
     diff = @(x) abs(normpdf(x, b1, s1) - normpdf(x, b2, s2));
