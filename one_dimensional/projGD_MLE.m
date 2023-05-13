@@ -1,7 +1,7 @@
 function [u,v, res, iter] = projGD_MLE(y, X, u0, v0)
     %% Parameters
     max_iter = 10000;
-    tol = 0.01;
+    tol = 0.001;
     tolv = 1e-2;
     beta = 0.4;
     %% Definitions

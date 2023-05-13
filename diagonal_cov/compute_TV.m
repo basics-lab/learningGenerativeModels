@@ -1,6 +1,6 @@
 %%
 function l = compute_TV(sigma1,b1,sigma2,b2)
-    dom = max([b1;b2]) + 5*max([sigma1;sigma2])*ones(1,3);%bounds(sigma1,b1,sigma2,b2,100);% Integration bounds
+    dom = max([b1;b2]) + 6*max([sigma1;sigma2])*ones(1,3);%bounds(sigma1,b1,sigma2,b2,100);% Integration bounds
     d = 3;
     surfaces = (dec2bin(0:2^d-1)' - '0') == 1;
     l = 0;

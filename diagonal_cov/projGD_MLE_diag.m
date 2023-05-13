@@ -2,8 +2,8 @@ function [u,v,res,iter] = projGD_MLE_diag(Y, u0, v0)
     %% Parameters
     [d,~] = size(Y);
     max_iter = 5000;
-    tol = 0.001;
-    tolv = 1e-3;
+    tol = 0.01;
+    tolv = 1e-2;
     beta = 0.5;
     grad = @(u,v) grad_lik_func_diag(Y,u,v);
     lik = @(u,v,du,dv,a) -lik_func_diag(Y, (u + a*du), max([v + a*dv, tolv*ones(d,1)],[],2));
