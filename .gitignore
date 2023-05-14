@@ -32,3 +32,9 @@ codegen/
 
 # Octave session info
 octave-workspace
+
+# SLURM output files
+*slurm*.out
+
+# All bash scripts
+*.sh
