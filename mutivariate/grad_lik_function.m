@@ -6,7 +6,8 @@
 % grad_lik_function(Y,U,V)
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function [gradU, gradv] = grad_lik_function(Y,U,V)
+function [gradU, gradv, fail] = grad_lik_function(Y,U,V)
+    fail = false;
     [~,n] = size(Y);
     S = Y <= 0;
     Sc =~S;
@@ -32,7 +33,10 @@ function [gradU, gradv] = grad_lik_function(Y,U,V)
             invM = inv(chol(Us));
             invUs = invM*invM';
             mu = -invUs*(U(si, sci)*y_sc + 0.5*V(si));
-            x = sampleMultiTrunGauss(mu,invUs/2, n);
+            [x, fail] = sampleMultiTrunGauss(mu,invUs/2, n);
+            if fail
+                return
+            end
             % Gradient Updates
             mu_x = mean(x,2);
             gradU(si,si) = gradU(si,si) + -x*x'/n;
