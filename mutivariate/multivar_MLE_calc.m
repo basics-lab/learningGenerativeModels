@@ -1,8 +1,8 @@
 clear;clc;
-rng(1)
+rng(2)
 d = 3;
-n = 10000;
-kappa = 3; %sqrt condition number
+n = 20000;
+kappa = 7; %sqrt condition number
 A = eye(d) + randn(d,d)./(2*d);
 sigma = A*A';
 [L,D] = eig(sigma);

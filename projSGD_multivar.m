@@ -6,7 +6,7 @@ function [U_avg,V_avg,U,V] = projSGD_multivar(Y, U0, V0)
     num_batch = floor(n/batch_size);
     U = U0;
     V = V0;
-    r = 4;
+    r = 10;
     U_avg = zeros(d,d);
     V_avg = zeros(d,1);
     n_epochs = 10;
@@ -17,7 +17,7 @@ function [U_avg,V_avg,U,V] = projSGD_multivar(Y, U0, V0)
         fprintf("Starting epoch %i of %i\n",i, n_epochs);
         fprintf("Total of %i Batches to be run\n", num_batch)
         for t=1:num_batch
-            alpha = 1/(lambda*(t + (i-1)*num_batch));
+            alpha = 1/(lambda*(t + (i-1)*num_batch + 10));
             if mod(t,n_updates) == 0
                 fprintf("Total of %d/%d Batches Complete\n", t,num_batch)
             end
