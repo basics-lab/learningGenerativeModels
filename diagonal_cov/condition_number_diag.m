@@ -1,9 +1,9 @@
 clear;clc;
-rng(4);
+rng(8);
 d = 3;
 n= 5000;
 b = ones(d,1);
-sigma = [5;0.2;1];
+sigma = [1;1;1];
 u_star = b./sigma;
 v_star = 1./sigma;
 u0 = b + randn(d,1);

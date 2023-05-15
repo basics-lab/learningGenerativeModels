@@ -14,9 +14,11 @@ function run_condition_number(N, n, n_mc, seed)
         fprintf("Running now with kappa=%.2f\n", kappa(j));
         sigma_max = sqrt(kappa(j));
         sigma_min = sqrt(kappa(j))^(-1);
+        sigma_3 = unifrnd(sigma_min, sigma_max);
         parfor i=1:n_mc
             % Param
-            sigma = [sigma_max;sigma_min;1];
+            sigma = [sigma_max;sigma_min;sigma_3];
+            sigma = sigma(randperm(3));
             u_star = b./sigma;
             v_star = 1./sigma;
             u0 = b + randn(d,1);

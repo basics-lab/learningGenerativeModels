@@ -2,7 +2,7 @@ function [mu_hat, sigma2_hat, res, iter] = gradNormWu(y,u0,v0)
     %% Parameters
     max_iter = 10000;
     n = length(y);
-    tol = 0.001;
+    tol = 0.01;
     tolv = 1e-2;
     u_bnd = 8;
     beta = 0.5;
