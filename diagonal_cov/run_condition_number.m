@@ -5,7 +5,7 @@ function run_condition_number(N, n, n_mc, seed)
         fprintf("ON SLURM, CREATING A BIGGER POOL\n")
     end
     d = 3;
-    kappa = linspace(1,25,N);
+    kappa = linspace(1.6316, 25.6316,N);
     b = ones(d,1);
     dist_v_cond = zeros(n_mc, 6, N);
     dist_v_cond_wu = zeros(n_mc, 6, N);
@@ -14,11 +14,9 @@ function run_condition_number(N, n, n_mc, seed)
         fprintf("Running now with kappa=%.2f\n", kappa(j));
         sigma_max = sqrt(kappa(j));
         sigma_min = sqrt(kappa(j))^(-1);
-        sigma_3 = unifrnd(sigma_min, sigma_max);
         parfor i=1:n_mc
             % Param
-            sigma = [sigma_max;sigma_min;sigma_3];
-            sigma = sigma(randperm(3));
+            sigma = [sigma_max;sigma_min;1];
             u_star = b./sigma;
             v_star = 1./sigma;
             u0 = b + randn(d,1);

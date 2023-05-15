@@ -38,14 +38,18 @@ for i=1:4
     norm_var(:,i) = sum(dist_v_n_norm/10,2, "omitnan")/(10*n_mc - 1);
     exp_var(:,i) = sum(dist_v_n_exp/10,2, "omitnan")/(10*n_mc - 1);
 end
+normstd = norm_var.^0.5;
+expstd = exp_var.^0.5;
+normstderr = normstd/(n_mc*10)^0.5;
+expstderr = expstd/(n_mc*10)^0.5;
 figure;
 a = axes;
-errorbar(n_space, norm_mean(:,1), norm_var(:,1).^0.5, "Linewidth", 2, "Color", "#0072BD");
+errorbar(n_space, norm_mean(:,1), normstd(:,1), "Linewidth", 2, "Color", "#0072BD");
 hold on
-errorbar(n_space, exp_mean(:,1), exp_var(:,1).^0.5, "Linewidth", 2, "Color", "#D95319");
-errorbar(n_space, norm_mean(:,4), norm_var(:,4).^0.5,"--" ,"Linewidth", 2, "Color", "#0072BD");
+errorbar(n_space, exp_mean(:,1), expstd(:,1), "Linewidth", 2, "Color", "#D95319");
+errorbar(n_space, norm_mean(:,4), normstd(:,4),"-." ,"Linewidth", 2, "Color", "#0072BD");
 hold on
-errorbar(n_space, exp_mean(:,4), exp_var(:,4).^0.5, "-.","Linewidth", 2, "Color", "#D95319");
+errorbar(n_space, exp_mean(:,4), expstd(:,4), "-.","Linewidth", 2, "Color", "#D95319");
 ylim([2e-3 2e-1])
 a.XScale = "log";
 a.YScale = "log";
