@@ -2,6 +2,7 @@ function run_condition_number(N, n, n_mc, seed)
     rng(seed);
     if getenv('USER') == "justinkang"
         parpool(str2num(getenv('SLURM_CPUS_ON_NODE')));
+        fprintf("ON SLURM, CREATING A BIGGER POOL\n")
     end
     d = 3;
     kappa = linspace(1,25,N);
