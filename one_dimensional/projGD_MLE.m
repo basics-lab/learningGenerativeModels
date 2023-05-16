@@ -1,7 +1,7 @@
 function [u,v, res, iter] = projGD_MLE(y, X, u0, v0)
     %% Parameters
     max_iter = 10000;
-    tol = 0.001;
+    tol = 0.01;
     tolv = 1e-2;
     beta = 0.4;
     %% Definitions
@@ -10,7 +10,11 @@ function [u,v, res, iter] = projGD_MLE(y, X, u0, v0)
     gradu = @(u,v) X(:,S) * (v*y(S)' - u'*X(:,S))' ...
                  - X(:,Sc)* (normpdf(-u'*X(:,Sc))./normcdf(-u'*X(:,Sc)))';
     gradv = @(u,v) nnz(S)/v - y(S)'*(v*y(S) - X(:,S)'*u);
+    gradu2 = @(u,v) X(:,S) * (v*y(S)' - u'*X(:,S))' ...
+                 - X(:,Sc)* exp(-0.5*log(2*pi) - 0.5*(u'*X(:,Sc)).^2 - lognormcdf(-u'*X(:,Sc)))';
+
     lik = @(u,v,du,dv,a) -lik_func((u + a*du), max([v + a*dv, tolv]), X, y);
+    lik2 = @(u,v,du,dv,a) -lik_func((u + a*du), max([v + a*dv, tolv]), X, y);
     u = u0;
     v = v0;
     t = 0;

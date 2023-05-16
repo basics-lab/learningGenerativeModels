@@ -7,8 +7,8 @@ end
 distributions = ["Normal", "Exponential", "Cauchy"];
 distribution = distributions(dist_idx);
 rng(seed)
-N=6; % number of points
-d_space = 5:10:55; %number of samples
+N=10; % number of points
+d_space = ceil(linspace(5,80,N)); %number of samples
 sigma = 1;
 %%
 iter_v_n = zeros(N,n_mc);
@@ -57,7 +57,7 @@ for j = 1:N
     res_v_n(j,:) = res;
     iter_v_n(j,:) = iter;
 end
-filename = sprintf('%s_seed%d_d%i_%s.mat', distribution, seed,d ,datestr(now,'HH_MM_SS_FFF'));
+filename = sprintf('%s_seed%d_n%i_%s.mat', distribution, seed,n ,datestr(now,'HH_MM_SS_FFF'));
 save(filename);
 %% Helper Functions
 function [u,v] = parameter_tf(w,s)
