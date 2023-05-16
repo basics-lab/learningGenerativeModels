@@ -5,18 +5,19 @@ function run_condition_number(N, n, n_mc, seed)
         fprintf("ON SLURM, CREATING A BIGGER POOL\n")
     end
     d = 3;
-    kappa = linspace(1.6316, 25.6316,N);
+    kappa = linspace(1, 25^2,N);
     b = ones(d,1);
     dist_v_cond = zeros(n_mc, 6, N);
     dist_v_cond_wu = zeros(n_mc, 6, N);
     filename = sprintf('diag_cond_seed%d_%s.mat', seed, datestr(now,'HH_MM_SS_FFF'));
     for j=1:N
         fprintf("Running now with kappa=%.2f\n", kappa(j));
-        sigma_max = sqrt(kappa(j));
-        sigma_min = sqrt(kappa(j))^(-1);
-        parfor i=1:n_mc
+        sigma2_max = sqrt(kappa(j));
+        sigma2_min = sqrt(kappa(j))^(-1);
+        keyboard;
+        for i=1:n_mc
             % Param
-            sigma = [sigma_max;sigma_min;1];
+            sigma = [sigma2_max;sigma2_min;1].^0.5;
             u_star = b./sigma;
             v_star = 1./sigma;
             u0 = b + randn(d,1);
