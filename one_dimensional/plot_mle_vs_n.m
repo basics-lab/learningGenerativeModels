@@ -1,5 +1,9 @@
-function plot_mle_vs_n(dist_idx, n_dist_mc, n_mc, d, seed)
+function plot_mle_vs_n(dist_idx, n_dist_mc, n_mc, d, seed, mean, var)
 %% Setup
+if getenv('USER') == "justinkang"
+    parpool(str2num(getenv('SLURM_CPUS_ON_NODE')));
+    fprintf("ON SLURM, CREATING A BIGGER POOL\n")
+end
 distributions = ["Normal", "Exponential", "Cauchy"];
 distribution = distributions(dist_idx);
 rng(seed)
@@ -24,7 +28,7 @@ for j = 1:N
         if distribution == "Cauchy"
             X = trnd(1, d, n);
         elseif distribution == "Normal"
-            X = randn(d, n);
+            X = sqrt(var)*randn(d, n) + mean;
         elseif distribution == "Exponential"
             X = (2*(rand(d,n) > 0.5) - 1).*exprnd(1,d,n);
         end
@@ -39,7 +43,7 @@ for j = 1:N
         if distribution == "Cauchy"
             X_sample = trnd(1, d, n_dist_mc);
         elseif distribution == "Normal"
-            X_sample = randn(d, n_dist_mc);
+            X_sample = sqrt(var)*randn(d, n_dist_mc) + mean;
         elseif distribution == "Exponential"
             X_sample = (2*(rand(d,n_dist_mc) > 0.5) - 1).*exprnd(1,d,n_dist_mc);
         end
