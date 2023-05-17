@@ -28,11 +28,15 @@ for i=1:n_runs
         var_v_cond_wu(:,j) = var_v_cond_wu(:,j) + mean((squeeze(X{i}.dist_v_cond_wu(:,:,j))' - mean_dist_wu(:,j)).^2, 2,"omitnan");
     end
 end
+emp_std = (var_v_cond/n_runs).^0.5;
+emp_std_wu = (var_v_cond_wu/n_runs).^0.5;
+std_err = emp_std/sqrt(n_mc*n_runs);
+std_err_wu = emp_std/sqrt(n_mc*n_runs);
 figure;
 r = [1:3:20, 20];
-errorbar(kappa_space(r).^2, mean_dist(1,r), 0.1*var_v_cond(1,r), "LineWidth", 2);
+errorbar(kappa_space(r).^2, mean_dist(1,r), std_err(1,r), "LineWidth", 2);
 hold on;
-errorbar(kappa_space(r).^2, mean_dist_wu(1,r), 0.1*var_v_cond_wu(1,r), "LineWidth", 1);
+errorbar(kappa_space(r).^2, mean_dist_wu(1,r), std_err_wu(1,r), "LineWidth", 2);
 % x = [kappa_space, fliplr(kappa_space)];
 % curve1 = [mean_dist_wu + 0.1*var_v_cond_wu, fliplr(mean_dist_wu - 0.1*var_v_cond_wu)];
 % fill(x,curve1(1,:),[0.55, 0.81, 0.89]);
@@ -45,5 +49,5 @@ xlim([1 24^2])
 ylim([0.012 0.032])
 xlabel("Condition Number of $\Sigma$", "Interpreter","latex", "FontSize",16)
 ylabel("$d_{TV}(\hat{p}(y|\mathbf{x}), p(y|\mathbf{x}))$", "Interpreter","latex", "FontSize",16)
-legend("$d_{TV}(\hat{p}_{MLE}(y|\mathbf{x}), p(y|\mathbf{x}))$", ...
-    "$d_{TV}(\hat{p}'(y|\mathbf{x}), p(y|\mathbf{x}))$",  "Location","best", "Interpreter", "latex", "FontSize",16)
+legend("Our TV", ...
+    "Wu et. al TV",  "Location","best", "Interpreter", "latex", "FontSize",16)

@@ -8,7 +8,7 @@ distributions = ["Normal", "Exponential", "Cauchy"];
 distribution = distributions(dist_idx);
 rng(seed)
 N=10; % number of points
-d_space = ceil(linspace(5,80,N)); %number of samples
+d_space = ceil(logspace(log10(5),log10(80),N)); %number of samples
 sigma = 1;
 %%
 iter_v_n = zeros(N,n_mc);

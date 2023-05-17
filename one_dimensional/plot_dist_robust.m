@@ -55,4 +55,4 @@ a.XScale = "log";
 a.YScale = "log";
 xlabel("Number of Samples $n$", "Interpreter","latex", "FontSize",16)
 ylabel("$d_{TV}(\hat{p}_(y|\mathbf{x}), p_(y|\mathbf{x}))$", "Interpreter","latex", "FontSize",16)
-legend("$x_i\sim\mathcal{N}(0,1), k =5$","$x_i\sim\mathrm{Lap}\left( 0,1\right), k =5$", "$x_i\sim\mathcal{N}(0,1), k =20$","$x_i\sim\mathrm{Lap}\left( 0,1\right), k =20$","Interpreter", "Latex","FontSize",16)
+legend("$\mathbf{x} \sim\mathcal{N}(0,I_5)$","$\mathbf{x}\sim \bigotimes_5 \mathrm{Lap}\left( 0,1\right)$", "$\mathbf{x} \sim\mathcal{N}(0,I_{20})$","$\mathbf{x}\sim\bigotimes_{20}\mathrm{Lap}\left( 0,1\right), k =20$","Interpreter", "Latex","FontSize",16)
