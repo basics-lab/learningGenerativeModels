@@ -4,7 +4,7 @@ if getenv('USER') == "justinkang"
     parpool(str2num(getenv('SLURM_CPUS_ON_NODE')));
     fprintf("ON SLURM, CREATING A BIGGER POOL\n")
 end
-distributions = ["Normal", "Exponential", "Cauchy"];
+distributions = ["Normal", "Exponential", "Cauchy", "Mixture"];
 distribution = distributions(dist_idx);
 rng(seed)
 N=10; % number of points
@@ -23,7 +23,7 @@ for j = 1:N
     iter = zeros(n_mc,1);
     fprintf("Working on d=%i\n",d)
     tic;
-    parfor i = 1:n_mc
+    for i = 1:n_mc
         % Get new samples
         if distribution == "Cauchy"
             X = trnd(1, d, n);
@@ -31,6 +31,8 @@ for j = 1:N
             X = sqrt(var)*randn(d, n) + mean;
         elseif distribution == "Exponential"
             X = (2*(rand(d,n) > 0.5) - 1).*exprnd(1,d,n);
+        elseif distribution == "Mixture"
+            X = randn(d, n) + mean*(rand(d,n) < 0.01);
         end
         y = (w_star'*X)' + sigma*randn(n,1);
         u0 = randn(d,1);
@@ -46,6 +48,8 @@ for j = 1:N
             X_sample = sqrt(var)*randn(d, n_dist_mc) + mean;
         elseif distribution == "Exponential"
             X_sample = (2*(rand(d,n_dist_mc) > 0.5) - 1).*exprnd(1,d,n_dist_mc);
+        elseif distribution == "Mixture"
+            X_sample = randn(d, n) + mean*(rand(d,n) < 0.01);
         end
         dist(i) = distance_metrics(u_hat, v_hat, u_star, v_star, X_sample);
         
