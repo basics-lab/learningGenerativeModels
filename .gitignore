@@ -21,6 +21,9 @@ sccprj/
 # Saved Data
 *.mat
 
+# No PDFs
+*.pdf
+
 # Matlab code generation folders
 codegen/
 

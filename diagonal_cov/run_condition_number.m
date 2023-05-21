@@ -14,7 +14,6 @@ function run_condition_number(N, n, n_mc, seed)
         fprintf("Running now with kappa=%.2f\n", kappa(j));
         sigma2_max = sqrt(kappa(j));
         sigma2_min = sqrt(kappa(j))^(-1);
-        keyboard;
         for i=1:n_mc
             % Param
             sigma = [sigma2_max;sigma2_min;1].^0.5;

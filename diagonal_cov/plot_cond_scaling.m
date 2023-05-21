@@ -47,7 +47,7 @@ errorbar(kappa_space(r).^2, mean_dist_wu(1,r), std_err_wu(1,r), "LineWidth", 2);
 %plot(kappa_space, mean_dist_wu(1,:));
 xlim([1 24^2])
 ylim([0.012 0.032])
-xlabel("Condition Number of $\Sigma$", "Interpreter","latex", "FontSize",16)
-ylabel("$d_{TV}(\hat{p}(y|\mathbf{x}), p(y|\mathbf{x}))$", "Interpreter","latex", "FontSize",16)
+xlabel("Condition Number of $\Sigma^*$", "Interpreter","latex", "FontSize",16)
+ylabel("$d\left((\hat{w},\hat{\Sigma}), ( w^*,\Sigma^*) \right)$", "Interpreter","latex", "FontSize",16)
 legend("Our TV", ...
-    "Wu et. al TV",  "Location","best", "Interpreter", "latex", "FontSize",16)
+    "Wu et al. TV",  "Location","best", "Interpreter", "latex", "FontSize",16)

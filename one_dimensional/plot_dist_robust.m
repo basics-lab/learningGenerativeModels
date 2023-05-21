@@ -44,15 +44,15 @@ normstderr = normstd/(n_mc*10)^0.5;
 expstderr = expstd/(n_mc*10)^0.5;
 figure;
 a = axes;
-errorbar(n_space, norm_mean(:,1), normstd(:,1), "Linewidth", 2, "Color", "#0072BD");
+errorbar(n_space, norm_mean(:,1), normstderr(:,1), "-","Linewidth", 2, "Color", "#0072BD");
 hold on
-errorbar(n_space, exp_mean(:,1), expstd(:,1), "Linewidth", 2, "Color", "#D95319");
-errorbar(n_space, norm_mean(:,4), normstd(:,4),"-." ,"Linewidth", 2, "Color", "#0072BD");
+errorbar(n_space, exp_mean(:,1), expstderr(:,1), "-","Linewidth", 2, "Color", "#D95319");
+errorbar(n_space, norm_mean(:,4), normstderr(:,4),"-." ,"Linewidth", 2, "Color", "#0072BD");
 hold on
-errorbar(n_space, exp_mean(:,4), expstd(:,4), "-.","Linewidth", 2, "Color", "#D95319");
-ylim([2e-3 2e-1])
+errorbar(n_space, exp_mean(:,4), expstderr(:,4), "-.","Linewidth", 2, "Color", "#D95319");
+ylim("auto")
 a.XScale = "log";
 a.YScale = "log";
 xlabel("Number of Samples $n$", "Interpreter","latex", "FontSize",16)
-ylabel("$d_{TV}(\hat{p}_(y|\mathbf{x}), p_(y|\mathbf{x}))$", "Interpreter","latex", "FontSize",16)
-legend("$\mathbf{x} \sim\mathcal{N}(0,I_5)$","$\mathbf{x}\sim \bigotimes_5 \mathrm{Lap}\left( 0,1\right)$", "$\mathbf{x} \sim\mathcal{N}(0,I_{20})$","$\mathbf{x}\sim\bigotimes_{20}\mathrm{Lap}\left( 0,1\right), k =20$","Interpreter", "Latex","FontSize",16)
+ylabel("$d\left((\hat{w},\hat{\sigma}^2), ( w^*,\sigma^{2*}) \right)$", "Interpreter","latex", "FontSize",16)
+legend("$x \sim\mathcal{N}(0,I_5)$","$x\sim \bigotimes_5 \mathrm{Lap}\left( 0,1\right)$", "$x \sim\mathcal{N}(0,I_{20})$","$x\sim\bigotimes_{20}\mathrm{Lap}\left( 0,1\right), k =20$","Interpreter", "Latex","FontSize",16)

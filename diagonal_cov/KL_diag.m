@@ -1,6 +1,6 @@
 function KL = KL_diag(u1,v1,u2,v2)
     d = length(u1);
-    n=1000000;
+    n=100000;
     sigma = v2.^(-1);
     b = u2./v2;
     Y = max(0, ((sigma*ones(1,n)).*randn(d,n)) + b);
