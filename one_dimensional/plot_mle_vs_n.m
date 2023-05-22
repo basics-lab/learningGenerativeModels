@@ -4,11 +4,11 @@ if getenv('USER') == "justinkang"
     parpool(str2num(getenv('SLURM_CPUS_ON_NODE')));
     fprintf("ON SLURM, CREATING A BIGGER POOL\n")
 end
-distributions = ["Normal", "Exponential", "Cauchy"];
+distributions = ["Normal", "Exponential", "Cauchy", "Mixture"];
 distribution = distributions(dist_idx);
 rng(seed)
 N=10; % number of points
-n_space = ceil(logspace(2, 5, N)); %number of samples
+n_space = ceil(logspace(2, 4, N)); %number of samples
 w_star = ones(d,1);
 sigma = 1;
 [u_star,v_star] = parameter_tf(w_star, sigma);
@@ -16,6 +16,8 @@ sigma = 1;
 iter_v_n = zeros(N,n_mc);
 res_v_n = zeros(N,n_mc);
 dist_v_n = zeros(N,n_mc);
+filename = sprintf('%s_seed%d_d%i_%s.mat', distribution, seed,d ,datestr(now,'HH_MM_SS_FFF'));
+p=0.01;
 for j = 1:N
     n = n_space(j);
     dist = zeros(n_mc, 1);
@@ -31,6 +33,8 @@ for j = 1:N
             X = sqrt(var)*randn(d, n) + mean;
         elseif distribution == "Exponential"
             X = (2*(rand(d,n) > 0.5) - 1).*exprnd(1,d,n);
+        elseif distribution == "Mixture"
+            X = randn(d, n) + mean*(rand(d,n) < p);
         end
         y = (w_star'*X)' + sigma*randn(n,1);
         u0 = randn(d,1);
@@ -46,6 +50,8 @@ for j = 1:N
             X_sample = sqrt(var)*randn(d, n_dist_mc) + mean;
         elseif distribution == "Exponential"
             X_sample = (2*(rand(d,n_dist_mc) > 0.5) - 1).*exprnd(1,d,n_dist_mc);
+        elseif distribution == "Mixture"
+            X_sample = randn(d, n) + mean*(rand(d,n) < p);
         end
         dist(i) = distance_metrics(u_hat, v_hat, u_star, v_star, X_sample);
         
@@ -56,9 +62,8 @@ for j = 1:N
     dist_v_n(j,:) = dist;
     res_v_n(j,:) = res;
     iter_v_n(j,:) = iter;
+    save(filename);
 end
-filename = sprintf('%s_seed%d_d%i_%s.mat', distribution, seed,d ,datestr(now,'HH_MM_SS_FFF'));
-save(filename);
 %% Helper Functions
 function [u,v] = parameter_tf(w,s)
     u=w/s; v=1/s;

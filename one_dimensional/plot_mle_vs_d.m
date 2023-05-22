@@ -8,12 +8,14 @@ distributions = ["Normal", "Exponential", "Cauchy", "Mixture"];
 distribution = distributions(dist_idx);
 rng(seed)
 N=10; % number of points
-d_space = ceil(logspace(log10(5),log10(80),N)); %number of samples
+d_space = ceil(logspace(log10(5),log10(50),N)); %number of samples
 sigma = 1;
+filename = sprintf('%s_seed%d_n%i_%s.mat', distribution, seed,n ,datestr(now,'HH_MM_SS_FFF'));
 %%
 iter_v_n = zeros(N,n_mc);
 res_v_n = zeros(N,n_mc);
 dist_v_n = zeros(N,n_mc);
+p=0.01;
 for j = 1:N
     d = d_space(j);
     w_star = ones(d,1);
@@ -23,7 +25,7 @@ for j = 1:N
     iter = zeros(n_mc,1);
     fprintf("Working on d=%i\n",d)
     tic;
-    for i = 1:n_mc
+    parfor i = 1:n_mc
         % Get new samples
         if distribution == "Cauchy"
             X = trnd(1, d, n);
@@ -32,7 +34,7 @@ for j = 1:N
         elseif distribution == "Exponential"
             X = (2*(rand(d,n) > 0.5) - 1).*exprnd(1,d,n);
         elseif distribution == "Mixture"
-            X = randn(d, n) + mean*(rand(d,n) < 0.01);
+            X = randn(d, n) + mean*(rand(d,n) < p);
         end
         y = (w_star'*X)' + sigma*randn(n,1);
         u0 = randn(d,1);
@@ -49,7 +51,7 @@ for j = 1:N
         elseif distribution == "Exponential"
             X_sample = (2*(rand(d,n_dist_mc) > 0.5) - 1).*exprnd(1,d,n_dist_mc);
         elseif distribution == "Mixture"
-            X_sample = randn(d, n) + mean*(rand(d,n) < 0.01);
+            X_sample = randn(d, n) + mean*(rand(d,n) < p);
         end
         dist(i) = distance_metrics(u_hat, v_hat, u_star, v_star, X_sample);
         
@@ -60,9 +62,8 @@ for j = 1:N
     dist_v_n(j,:) = dist;
     res_v_n(j,:) = res;
     iter_v_n(j,:) = iter;
+    save(filename);
 end
-filename = sprintf('%s_seed%d_n%i_%s.mat', distribution, seed,n ,datestr(now,'HH_MM_SS_FFF'));
-save(filename);
 %% Helper Functions
 function [u,v] = parameter_tf(w,s)
     u=w/s; v=1/s;

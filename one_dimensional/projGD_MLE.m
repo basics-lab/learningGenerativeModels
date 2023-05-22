@@ -1,23 +1,21 @@
 function [u,v, res, iter] = projGD_MLE(y, X, u0, v0)
     %% Parameters
-    max_iter = 10000;
+    max_iter = 20000;
     tol = 0.01;
-    tolv = 1e-2;
-    beta = 0.4;
+    tolv = 1e-1;
+    beta = 0.5;
     %% Definitions
     S = y > 0;
     Sc = y <= 0;
-    gradu = @(u,v) X(:,S) * (v*y(S)' - u'*X(:,S))' ...
-                 - X(:,Sc)* (normpdf(-u'*X(:,Sc))./normcdf(-u'*X(:,Sc)))';
+    %gradu = @(u,v) X(:,S) * (v*y(S)' - u'*X(:,S))' ...
+    %            - X(:,Sc)* (normpdf(-u'*X(:,Sc))./normcdf(-u'*X(:,Sc)))';
     gradv = @(u,v) nnz(S)/v - y(S)'*(v*y(S) - X(:,S)'*u);
     gradu3 = @(u,v) X(:,S) * (v*y(S)' - u'*X(:,S))' ...
                  - X(:,Sc)* mills_ratio(u'*X(:,Sc)).^(-1)';
-    gradu2 = @(u,v) X(:,S) * (v*y(S)' - u'*X(:,S))' ...
-                 - X(:,Sc)* exp(-0.5*log(2*pi) - 0.5*(u'*X(:,Sc)).^2 - lognormcdf(-u'*X(:,Sc)))';
-
-    lik = @(u,v,du,dv,a) -lik_func((u + a*du), max([v + a*dv, tolv]), X, y);
-    lik2 = @(u,v,du,dv,a) -lik_func2((u + a*du), max([v + a*dv, tolv]), X, y);
+    %lik = @(u,v,du,dv,a) -lik_func((u + a*du), max([v + a*dv, tolv]), X, y);
+    %lik2 = @(u,v,du,dv,a) -lik_func2((u + a*du), max([v + a*dv, tolv]), X, y);
     lik3 = @(u,v,du,dv,a) -lik_func3((u + a*du), max([v + a*dv, tolv]), X, y);
+    %[d,~] = size(u0);
     u = u0;
     v = v0;
     t = 0;
@@ -34,12 +32,17 @@ function [u,v, res, iter] = projGD_MLE(y, X, u0, v0)
         if isnan(diff)
             diff = Inf;
         end
-        while diff > -alpha/2*res
+        while (diff > -alpha/2*res) && (diff > 0 || alpha >1e-13)
             alpha = beta*alpha;
             diff = lik3(u,v,du,dv,alpha) - curr;
             if isnan(diff)
                 diff = Inf;
             end
+        end
+        if diff < 0 && alpha < 1e-13
+            fprintf("[Warning] Took a small step, function is very non-smooth, exiting\n")
+            iter = t;
+            return
         end
         curr = diff + curr;
         u = u + alpha*du;
