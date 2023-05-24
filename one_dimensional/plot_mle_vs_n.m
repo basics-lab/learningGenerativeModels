@@ -1,6 +1,6 @@
 function plot_mle_vs_n(dist_idx, n_dist_mc, n_mc, d, seed, mean, var)
 %% Setup
-if getenv('USER') == "justinkang"
+if getenv('USER') == ""
     parpool(str2num(getenv('SLURM_CPUS_ON_NODE')));
     fprintf("ON SLURM, CREATING A BIGGER POOL\n")
 end
