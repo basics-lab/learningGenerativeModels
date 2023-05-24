@@ -1,6 +1,6 @@
 function run_diag_dim(N, n, n_mc, seed)
     rng(seed);
-    if getenv('USER') == "justinkang"
+    if getenv('USER') == ""
         parpool(str2num(getenv('SLURM_CPUS_ON_NODE')));
         fprintf("ON SLURM, CREATING A BIGGER POOL\n")
     end
